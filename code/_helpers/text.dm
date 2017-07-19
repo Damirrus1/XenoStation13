@@ -23,7 +23,7 @@
  */
 
 //Used for preprocessing entered text
-/proc/sanitize(var/input, var/max_length = MAX_MESSAGE_LEN, var/encode = 1, var/trim = 1, var/extra = 1)
+/proc/sanitize(var/input, var/max_length = MAX_MESSAGE_LEN, var/encode = 1, var/trim = 1, var/extra = 1, var/index = 1)
 	if(!input)
 		return
 
@@ -38,16 +38,27 @@
 		//In addition to processing html, html_encode removes byond formatting codes like "\ red", "\ i" and other.
 		//It is important to avoid double-encode text, it can "break" quotes and some other characters.
 		//Also, keep in mind that escaped characters don't work in the interface (window titles, lower left corner of the main window, etc.)
-		input = html_encode(input)
+		input = rhtml_encode(input)
 	else
 		//If not need encode text, simply remove < and >
 		//note: we can also remove here byond formatting codes: 0xFF + next byte
-		input = replace_characters(input, list("<"=" ", ">"=" "))
+		input = replace_characters(input, list("<"=" ", ">"=" ", "ÿ"="&#255"))
 
 	if(trim)
 		//Maybe, we need trim text twice? Here and before copytext?
 		input = trim(input)
 
+	if(index)
+		//Maybe, we need in fix "ÿ"? Here and before it send's to chat?
+		var/ohfix = findtext(input, "ÿ")
+		input = replacetext(input, "ÿ", "&#255;")
+
+	return input
+
+/proc/rhtml_encode(var/input)
+	input = replacetext(input, "<", "&lt;")
+	input = replacetext(input, ">", "&gt;")
+	input = replacetext(input, "ÿ", "&#255;")
 	return input
 
 //Run sanitize(), but remove <, >, " first to prevent displaying them as &gt; &lt; &34; in some places, after html_encode().
