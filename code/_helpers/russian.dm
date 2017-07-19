@@ -2,7 +2,7 @@
 /proc/rhtml_decode(var/input)
 	input = replacetext(input, "&gt;", ">")
 	input = replacetext(input, "&lt;", "<")
-	input = replacetext(input, "&#255;", "?")
+	input = replacetext(input, "&#255;", "ÿ")
 	return input
 
 
@@ -17,7 +17,7 @@
 		else if (a == 184)
 			t += ascii2text(168)
 		else t += ascii2text(a)
-	t = replacetext(t,"&#255;","?")
+	t = replacetext(t,"&#255;","ÿ")
 	return t
 
 /proc/rlowertext(text as text)
@@ -35,10 +35,10 @@
 
 //RUS CONVERTERS
 /proc/russian_to_cp1251(var/input)//CHATBOX
-	return replacetext(input, "?", "&#255;")
+	return replacetext(input, "ÿ", "&#255;")
 
 /proc/russian_to_utf8(var/input)//PDA PAPER POPUPS
-	return replacetext(input, "?", "&#1103;")
+	return replacetext(input, "ÿ", "&#1103;")
 
 /proc/utf8_to_cp1251(input)
 	return replacetext(input, "&#1103;", "&#255;")
@@ -48,16 +48,16 @@
 
 //Prepare text for edit. Replace "?" with "\?" for edition. Don't forget to call post_edit().
 /proc/edit_cp1251(input)
-	return replacetext(input, "&#255;", "\\?")
+	return replacetext(input, "&#255;", "\\ÿ")
 
 /proc/edit_utf8(input)
-	return replacetext(input, "&#1103;", "\\?")
+	return replacetext(input, "&#1103;", "\\ÿ")
 
 /proc/post_edit_cp1251(input)
-	return replacetext(input, "\\?", "&#255;")
+	return replacetext(input, "\\ÿ", "&#255;")
 
 /proc/post_edit_utf8(input)
-	return replacetext(input, "\\?", "&#1103;")
+	return replacetext(input, "\\ÿ", "&#1103;")
 
 //input
 
